@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose');
 const port = 8080;
 const listings = require('./models/listing');
+app.use((express.urlencoded({extended: true})));
 main()
 .then(() => {
 console.log("connected to database")})
@@ -22,6 +23,25 @@ app.get('/listings', async (req, res) => {
    res.render('./listings/index.ejs',{allListings});
 
 });
+app.get('/listings/new', async (req, res) => {
+    
+    res.render('./listings/new.ejs');
+ 
+ });
+ app.post('/listings', async (req, res) => {
+    let newlistings = req.body.listing;
+    const newlisting = new listings(newlistings);
+    newlisting.save();
+    res.redirect('/listings');
+ });
+ 
+
+app.get('/listings/:id', async (req, res) => {
+    let {id } = req.params;
+    const listing = await listings.findById(id);
+    res.render('./listings/show.ejs',{listing});
+ 
+ });
 app.get('/testListings',async (req,res)=>{
     let samplelisting = new listings({
         title: "my home",
