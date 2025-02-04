@@ -3,7 +3,16 @@ const app = express();
 const mongoose = require('mongoose');
 const port = 8080;
 const listings = require('./models/listing');
+const ejsmate = require('ejs-mate');
+const path = require('path');
 app.use((express.urlencoded({extended: true})));
+app.set('view engine', 'ejs');
+app.set("views",(path.join(__dirname, 'views')));
+
+app.engine('ejs', ejsmate);
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, '/public')));
 main()
 .then(() => {
 console.log("connected to database")})
@@ -41,6 +50,19 @@ app.get('/listings/:id', async (req, res) => {
     const listing = await listings.findById(id);
     res.render('./listings/show.ejs',{listing});
  
+ });
+ app.get('/listings/:id/edit', async (req, res) => {
+    let {id } = req.params;
+    const listing = await listings.findById(id);
+    res.render('./listings/edit.ejs',{listing});
+ 
+ });
+
+ app.put('/listings/:id', async (req, res) => {
+
+    let {id} = req.params;
+    const listing = await listings.findByIdAndUpdate(id,{...req.body.listing});
+    res.redirect(`/listings/${id}`);
  });
 app.get('/testListings',async (req,res)=>{
     let samplelisting = new listings({
