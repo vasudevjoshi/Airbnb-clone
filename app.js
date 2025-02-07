@@ -5,6 +5,8 @@ const port = 8080;
 const listings = require('./models/listing');
 const ejsmate = require('ejs-mate');
 const path = require('path');
+
+const wrapAsync = require('./utils/wrapAsync');
 app.use((express.urlencoded({extended: true})));
 app.set('view engine', 'ejs');
 app.set("views",(path.join(__dirname, 'views')));
@@ -37,12 +39,15 @@ app.get('/listings/new', async (req, res) => {
     res.render('./listings/new.ejs');
  
  });
- app.post('/listings', async (req, res) => {
-    let newlistings = req.body.listing;
-    const newlisting = new listings(newlistings);
-    newlisting.save();
-    res.redirect('/listings');
- });
+ app.post('/listings', wrapAsync(async (req, res,next) => {
+    
+        let newlistings = req.body.listing;
+        const newlisting = new listings(newlistings);
+        await newlisting.save();
+        res.redirect('/listings');
+ 
+ })
+);
  
 
 app.get('/listings/:id', async (req, res) => {
@@ -64,6 +69,17 @@ app.get('/listings/:id', async (req, res) => {
     const listing = await listings.findByIdAndUpdate(id,{...req.body.listing});
     res.redirect(`/listings/${id}`);
  });
+
+ // delete the listing
+ app.delete('/listings/:id', async (req, res) => {
+    let {id} = req.params;
+    const listing = await listings.findByIdAndDelete(id);
+    console.log(listing);
+    res.redirect('/listings');
+ });
+app.use((err,req,res,next)=>{
+    res.send("something went wrong!!");
+});
 app.get('/testListings',async (req,res)=>{
     let samplelisting = new listings({
         title: "my home",

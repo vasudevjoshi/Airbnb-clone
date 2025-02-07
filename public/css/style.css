@@ -3,6 +3,7 @@ body{
    display: flex;
    flex-direction: column;
    height: 100vh;
+   width: 100vw;
 }
 .container{
    flex: 1;
@@ -56,6 +57,8 @@ body{
    align-items: space-evenly;
  }
  .card{
+  margin-left: 1rem !important;
+  margin-right: 1rem !important;
    margin-bottom: 2rem;
    border: none !important;
  }
@@ -77,3 +80,15 @@ body{
  .listing-link{
    text-decoration: none;
  }
+/*show.ejs*/
+.show-img{
+  height: 30vh;
+
+}
+/* .btns{
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 1rem !important;
+  margin-left: 10rem !important;
+  padding: 1rem !important;
+} */
