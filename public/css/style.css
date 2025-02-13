@@ -92,3 +92,10 @@ body{
   margin-left: 10rem !important;
   padding: 1rem !important;
 } */
+
+.card-details{
+  margin-left: 0px !important;
+}
+.listing-card{
+  border: 1px solid #ebebeb !important;
+}
