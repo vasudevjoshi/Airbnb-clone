@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reviews = require('./review.js');
-
+const users = require('./user.js');
 const listingSchema = new Schema(
     {
         title: {
@@ -10,9 +10,8 @@ const listingSchema = new Schema(
         },
         description: String,
         image: {
-            type : String,
-            default: "https://unsplash.com/photos/blue-body-of-water-in-front-of-building-near-trees-during-nighttime-M7GddPqJowg",
-            set: (v) => v=== ""? "https://unsplash.com/photos/blue-body-of-water-in-front-of-building-near-trees-during-nighttime-M7GddPqJowg": v, 
+           url: String,
+           filename: String
         },
         price: Number,
         location: String,
@@ -21,9 +20,14 @@ const listingSchema = new Schema(
             {
                 type: Schema.Types.ObjectId,
                 ref: "Review"
-            }
-        ]
+            },
+        ],
+        owner:{
+            type: Schema.Types.ObjectId,
+            ref: "user"
+        }
     }
+   
 );
 
 listingSchema.post('findOneAndDelete', async(listing) =>{

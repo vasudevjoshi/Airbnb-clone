@@ -9,10 +9,11 @@ console.log("connected to database")})
     console.error(err);
 });
 async function main(){
-    await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+    await mongoose.connect(process.env.ATLASDB_URL);
 }
 async function initizeData() {
      await listings.deleteMany({});
+     initData.data = initData.data.map((obj)=>({...obj,owner: "67b176b388193368118036ff",}));
      await listings.insertMany(initData.data);
 };
 initizeData();
